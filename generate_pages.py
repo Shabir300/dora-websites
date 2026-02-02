@@ -201,6 +201,10 @@ html_template = r"""<!DOCTYPE html>
                 <a href="{{MAP_LINK}}" target="_blank" class="btn-map">
                     <i class="fas fa-location-arrow"></i> GET DIRECTIONS
                 </a>
+
+                <a href="https://nearby.doraquran.pk" target="_blank" class="btn-map">
+                    <i class="fas fa-location-arrow"></i> NEARBY DORA LOCATIONS APP
+                </a>
             </div>
         </div>
 
@@ -267,7 +271,7 @@ html_template = r"""<!DOCTYPE html>
         const ADMIN_PHONE = "{{WA_PHONE}}";
         const WA_PHONE = "{{WA_PHONE}}";
 
-        const N8N_WEBHOOK_URL = "https://n8n.premierchoiceint.online/webhook-test/registration-trigger"
+        const N8N_WEBHOOK_URL = "https://n8n.premierchoiceint.online/webhook/registration-trigger"
 
         window.submitForm = async function() {
             const name = document.getElementById('name').value.trim();
