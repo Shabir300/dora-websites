@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dora Tarjuma Quran 2026 - Avalon Marquee</title>
+    <title>Dora Tarjuma Quran 2026 - Dewan-e-Khas Marriage Hall</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Gulzar:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -82,7 +82,7 @@
 
     <nav class="nav-bar">
         <img src="logo.svg" alt="Tanzeem" class="nav-logo" />
-        <a href="https://wa.me/923215852714?text=Assalamualaikum,%20I%20need%20more%20information%20about%20Dora%20Tarjuma%20Quran%20at%20Avalon Marquee" class="nav-whatsapp" target="_blank">
+        <a href="https://wa.me/923005077164?text=Assalamualaikum,%20I%20need%20more%20information%20about%20Dora%20Tarjuma%20Quran%20at%20Dewan-e-Khas Marriage Hall" class="nav-whatsapp" target="_blank">
             <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> <span>Contact</span>
         </a>
     </nav>
@@ -133,7 +133,7 @@
         <div class="form-card">
             <form id="main-form">
                 
-                <input type="hidden" id="input_location" value="Avalon Marquee" />
+                <input type="hidden" id="input_location" value="Dewan-e-Khas Marriage Hall" />
 
                 <div class="progress-indicator">
                     <div class="dot active" id="dot-1"></div><div class="dot" id="dot-2"></div><div class="dot" id="dot-3"></div>
@@ -172,7 +172,7 @@
                         <h2 style="color:var(--primary); margin-bottom:10px; font-weight:800;">JazakAllah Khair!</h2>
                         <p style="color:var(--text-gray); margin-bottom: 20px;">Your registration is confirmed.</p>
                         <div style="background:#f0fdf4; padding:15px; border-radius:12px; font-size:0.9rem; color:var(--primary-dark);">
-                            For updates, save our number: <br><strong>3215852714</strong>
+                            For updates, save our number: <br><strong>3005077164</strong>
                         </div>
                     </div>
                 </div>
@@ -184,14 +184,14 @@
         <div class="venue-box">
             <div class="venue-header">EVENT VENUE</div>
             <div class="venue-body">
-                <div class="venue-name urdu" style="font-family: 'Noto Nastaliq Urdu', serif;">Avalon Marquee</div>
-                <p class="urdu" style="color:var(--text-gray); margin-bottom:1.5rem; text-align: center;">Avalon Marquee, G.T. Road, Opposite DHA 2 (Gate No. 3), Rawalpindi</p>
+                <div class="venue-name urdu" style="font-family: 'Noto Nastaliq Urdu', serif;">Dewan-e-Khas Marriage Hall</div>
+                <p class="urdu" style="color:var(--text-gray); margin-bottom:1.5rem; text-align: center;">Dewan-e-Khas Marriage Hall, near Misrial Road, Rawalpindi Cantt</p>
                 
                 <div class="map-container">
-                    <iframe src="https://maps.google.com/maps?q=Avalon%20Marquee%2C%20G.T.%20Road%2C%20Opposite%20DHA%202%20%28Gate%20No.%203%29%2C%20Rawalpindi%20Islamabad&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://maps.google.com/maps?q=Dewan-e-Khas%20Marriage%20Hall%2C%20near%20Misrial%20Road%2C%20Rawalpindi%20Cantt%20Islamabad&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
 
-                <a href="https://maps.app.goo.gl/jpNRWMDiK96ku1FXA" target="_blank" class="btn-map">
+                <a href="https://maps.app.goo.gl/1iERmCkWCojMCfYJ6" target="_blank" class="btn-map">
                     <i class="fas fa-location-arrow"></i> GET DIRECTIONS
                 </a>
             </div>
@@ -206,13 +206,20 @@
 
     <footer><p>© 2026 Tanzeem-e-Islami. All rights reserved.</p></footer>
 
-    <script type="module">
-        import { neon } from "https://esm.sh/@neondatabase/serverless";
+    <script>
+        // ──────────────────────────────────────────────
+        // UI & Helper Functions (Standard Script)
+        // ──────────────────────────────────────────────
 
-        const neon_db_url = "postgresql://neondb_owner:npg_j7SFZqzR5the@ep-empty-rice-a18ykd4a-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
-        const sql = neon(neon_db_url);
+        // Normalizes Pakistani numbers to 92XXXXXXXXXX
+        window.formatPhone = function(raw) {
+            let num = raw.replace(/[\s\-\(\)]/g, ""); 
+            if (num.startsWith("+92")) num = num.slice(3);
+            else if (num.startsWith("92") && num.length === 12) num = num.slice(2);
+            else if (num.startsWith("0")) num = num.slice(1);
+            return "92" + num; 
+        };
 
-        // Helper functions attached to window for global access
         window.updateDots = function(step) { 
             document.querySelectorAll('.dot').forEach((d, i) => { 
                 d.classList.remove('active'); 
@@ -242,6 +249,18 @@
             document.querySelector(`.step-content[data-step="${prev}"]`).classList.add('active');
             window.updateDots(prev);
         };
+    </script>
+
+    <script type="module">
+        import { neon } from "https://esm.sh/@neondatabase/serverless";
+
+        const neon_db_url = "postgresql://neondb_owner:npg_j7SFZqzR5the@ep-empty-rice-a18ykd4a-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+        const sql = neon(neon_db_url);
+
+        const ADMIN_PHONE = "923005077164";
+        const WA_PHONE = "923005077164";
+
+        const N8N_WEBHOOK_URL = "https://n8n.premierchoiceint.online/webhook-test/registration-trigger"
 
         window.submitForm = async function() {
             const name = document.getElementById('name').value.trim();
@@ -260,9 +279,12 @@
             const age = document.getElementById('age').value || '';
             const profession = document.getElementById('profession').value || '';
 
+            // formatPhone is now in the global scope from the script above
+            const formattedMobile = window.formatPhone(mobile);
+
             try {
                 // Ensure the table exists (idempotent)
-                await sql`CREATE TABLE IF NOT EXISTS "registration-avalon-marquee" (
+                await sql`CREATE TABLE IF NOT EXISTS "registration-dewan-e-khas-marriage-hall" (
                     id SERIAL PRIMARY KEY,
                     timestamp TEXT,
                     location TEXT,
@@ -275,23 +297,23 @@
                 )`;
 
                 // Insert the new registration
-                await sql`INSERT INTO "registration-avalon-marquee" (timestamp, location, read, want, name, mobile, age, profession)
-                    VALUES (${timestamp}, ${location}, ${read}, ${want}, ${name}, ${mobile}, ${age}, ${profession})`;
+                await sql`INSERT INTO "registration-dewan-e-khas-marriage-hall" (timestamp, location, read, want, name, mobile, age, profession)
+                    VALUES (${timestamp}, ${location}, ${read}, ${want}, ${name}, ${formattedMobile}, ${age}, ${profession})`;
 
-                // Trigger n8n Webhook for WhatsApp Automation (WAHA API)
-                const N8N_WEBHOOK_URL = "YOUR_N8N_WEBHOOK_URL_HERE"; // <--- PASTE YOUR N8N WEBHOOK URL HERE
-                
+                // ── 3. Fire n8n webhook (non-blocking) ──
                 fetch(N8N_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        event: "new_registration",
-                        created_at: timestamp,
-                        venue: location,
-                        admin_phone: "923215852714",
-                        user: { name, mobile, age, profession }
+                        user_name:   name,
+                        user_phone:  formattedMobile,       // 92XXXXXXXXXX
+                        admin_phone: ADMIN_PHONE,           // dynamic 
+                        age:         age,
+                        profession:  profession,
+                        venue:       location,
+                        registered_at: timestamp
                     })
-                }).catch(err => console.log("Webhook trigger failed:", err));
+                }).catch(err => console.warn("n8n webhook call failed (non-critical):", err));
 
                 // Show success message
                 document.querySelector(`.step-content[data-step="3"]`).classList.remove('active');

@@ -2,9 +2,10 @@ import pandas as pd
 import urllib.parse
 import os
 import re
+import shutil
 
 # 1. SETUP: Define the HTML Template
-html_template = """<!DOCTYPE html>
+html_template = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -212,13 +213,20 @@ html_template = """<!DOCTYPE html>
 
     <footer><p>© 2026 Tanzeem-e-Islami. All rights reserved.</p></footer>
 
-    <script type="module">
-        import { neon } from "https://esm.sh/@neondatabase/serverless";
+    <script>
+        // ──────────────────────────────────────────────
+        // UI & Helper Functions (Standard Script)
+        // ──────────────────────────────────────────────
 
-        const neon_db_url = "postgresql://neondb_owner:npg_j7SFZqzR5the@ep-empty-rice-a18ykd4a-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
-        const sql = neon(neon_db_url);
+        // Normalizes Pakistani numbers to 92XXXXXXXXXX
+        window.formatPhone = function(raw) {
+            let num = raw.replace(/[\s\-\(\)]/g, ""); 
+            if (num.startsWith("+92")) num = num.slice(3);
+            else if (num.startsWith("92") && num.length === 12) num = num.slice(2);
+            else if (num.startsWith("0")) num = num.slice(1);
+            return "92" + num; 
+        };
 
-        // Helper functions attached to window for global access
         window.updateDots = function(step) { 
             document.querySelectorAll('.dot').forEach((d, i) => { 
                 d.classList.remove('active'); 
@@ -248,6 +256,18 @@ html_template = """<!DOCTYPE html>
             document.querySelector(`.step-content[data-step="${prev}"]`).classList.add('active');
             window.updateDots(prev);
         };
+    </script>
+
+    <script type="module">
+        import { neon } from "https://esm.sh/@neondatabase/serverless";
+
+        const neon_db_url = "postgresql://neondb_owner:npg_j7SFZqzR5the@ep-empty-rice-a18ykd4a-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+        const sql = neon(neon_db_url);
+
+        const ADMIN_PHONE = "{{WA_PHONE}}";
+        const WA_PHONE = "{{WA_PHONE}}";
+
+        const N8N_WEBHOOK_URL = "https://n8n.premierchoiceint.online/webhook-test/registration-trigger"
 
         window.submitForm = async function() {
             const name = document.getElementById('name').value.trim();
@@ -266,6 +286,9 @@ html_template = """<!DOCTYPE html>
             const age = document.getElementById('age').value || '';
             const profession = document.getElementById('profession').value || '';
 
+            // formatPhone is now in the global scope from the script above
+            const formattedMobile = window.formatPhone(mobile);
+
             try {
                 // Ensure the table exists (idempotent)
                 await sql`CREATE TABLE IF NOT EXISTS "{{TABLE_NAME}}" (
@@ -282,22 +305,22 @@ html_template = """<!DOCTYPE html>
 
                 // Insert the new registration
                 await sql`INSERT INTO "{{TABLE_NAME}}" (timestamp, location, read, want, name, mobile, age, profession)
-                    VALUES (${timestamp}, ${location}, ${read}, ${want}, ${name}, ${mobile}, ${age}, ${profession})`;
+                    VALUES (${timestamp}, ${location}, ${read}, ${want}, ${name}, ${formattedMobile}, ${age}, ${profession})`;
 
-                // Trigger n8n Webhook for WhatsApp Automation (WAHA API)
-                const N8N_WEBHOOK_URL = "YOUR_N8N_WEBHOOK_URL_HERE"; // <--- PASTE YOUR N8N WEBHOOK URL HERE
-                
+                // ── 3. Fire n8n webhook (non-blocking) ──
                 fetch(N8N_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        event: "new_registration",
-                        created_at: timestamp,
-                        venue: location,
-                        admin_phone: "{{WA_PHONE}}",
-                        user: { name, mobile, age, profession }
+                        user_name:   name,
+                        user_phone:  formattedMobile,       // 92XXXXXXXXXX
+                        admin_phone: ADMIN_PHONE,           // dynamic 
+                        age:         age,
+                        profession:  profession,
+                        venue:       location,
+                        registered_at: timestamp
                     })
-                }).catch(err => console.log("Webhook trigger failed:", err));
+                }).catch(err => console.warn("n8n webhook call failed (non-critical):", err));
 
                 // Show success message
                 document.querySelector(`.step-content[data-step="3"]`).classList.remove('active');
@@ -326,7 +349,7 @@ try:
     df = pd.read_csv(csv_file) 
     
     # Create an output directory
-    output_dir = os.path.join("generated_pages", "DB_Websites")
+    output_dir = os.path.join("new_pages", "")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -381,14 +404,35 @@ try:
         filled_html = filled_html.replace("{{WA_PHONE}}", wa_phone)
         
         # D. SAVE FILE
-        # Naming the file using the 'Location Name' (e.g., Abpara.html)
+        # D. SAVE FILE & ASSETS
+        # Create a specific folder for this location (e.g. new_pages/Abpara)
+        # Using loc_id as the folder name
+        safe_folder_name = re.sub(r'[<>:"/\\|?*]', '', loc_id).strip()
+        location_folder = os.path.join(output_dir, safe_folder_name)
+        
+        if not os.path.exists(location_folder):
+            os.makedirs(location_folder)
+
+        # 1. Save HTML
         filename = f"{loc_id}.html"
-        filepath = os.path.join(output_dir, filename)
+        filepath = os.path.join(location_folder, filename)
         
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(filled_html)
+
+        # 2. Copy Assets (logo.svg, promo.mp4)
+        # They are located beside this script.
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        src_logo = os.path.join(current_dir, "logo.svg")
+        if os.path.exists(src_logo):
+            shutil.copy(src_logo, location_folder)
             
-        print(f"✅ Generated: {filename}")
+        src_promo = os.path.join(current_dir, "promo.mp4")
+        if os.path.exists(src_promo):
+            shutil.copy(src_promo, location_folder)
+
+        print(f"✅ Generated: {location_folder} (with html, logo, video)")
 
     print(f"\n🎉 Success! All files are in the '{output_dir}' folder.")
 
