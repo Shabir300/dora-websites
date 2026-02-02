@@ -1,15 +1,9 @@
-import pandas as pd
-import urllib.parse
-import os
-import re
-
-# 1. SETUP: Define the HTML Template
-html_template = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dora Tarjuma Quran 2026 - {{VENUE_NAME}}</title>
+    <title>Dora Tarjuma Quran 2026 - Dewan-e-Khas Marriage Hall</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Gulzar:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -88,7 +82,7 @@ html_template = """<!DOCTYPE html>
 
     <nav class="nav-bar">
         <img src="logo.svg" alt="Tanzeem" class="nav-logo" />
-        <a href="https://wa.me/{{WA_PHONE}}?text=Assalamualaikum,%20I%20need%20more%20information%20about%20Dora%20Tarjuma%20Quran%20at%20{{VENUE_NAME}}" class="nav-whatsapp" target="_blank">
+        <a href="https://wa.me/923005077164?text=Assalamualaikum,%20I%20need%20more%20information%20about%20Dora%20Tarjuma%20Quran%20at%20Dewan-e-Khas Marriage Hall" class="nav-whatsapp" target="_blank">
             <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> <span>Contact</span>
         </a>
     </nav>
@@ -139,7 +133,7 @@ html_template = """<!DOCTYPE html>
         <div class="form-card">
             <form id="main-form">
                 
-                <input type="hidden" id="input_location" value="{{VENUE_NAME}}" />
+                <input type="hidden" id="input_location" value="Dewan-e-Khas Marriage Hall" />
 
                 <div class="progress-indicator">
                     <div class="dot active" id="dot-1"></div><div class="dot" id="dot-2"></div><div class="dot" id="dot-3"></div>
@@ -178,7 +172,7 @@ html_template = """<!DOCTYPE html>
                         <h2 style="color:var(--primary); margin-bottom:10px; font-weight:800;">JazakAllah Khair!</h2>
                         <p style="color:var(--text-gray); margin-bottom: 20px;">Your registration is confirmed.</p>
                         <div style="background:#f0fdf4; padding:15px; border-radius:12px; font-size:0.9rem; color:var(--primary-dark);">
-                            For updates, save our number: <br><strong>{{PHONE}}</strong>
+                            For updates, save our number: <br><strong>3005077164</strong>
                         </div>
                     </div>
                 </div>
@@ -190,14 +184,14 @@ html_template = """<!DOCTYPE html>
         <div class="venue-box">
             <div class="venue-header">EVENT VENUE</div>
             <div class="venue-body">
-                <div class="venue-name urdu" style="font-family: 'Noto Nastaliq Urdu', serif;">{{VENUE_NAME}}</div>
-                <p class="urdu" style="color:var(--text-gray); margin-bottom:1.5rem; text-align: center;">{{ADDRESS}}</p>
+                <div class="venue-name urdu" style="font-family: 'Noto Nastaliq Urdu', serif;">Dewan-e-Khas Marriage Hall</div>
+                <p class="urdu" style="color:var(--text-gray); margin-bottom:1.5rem; text-align: center;">Dewan-e-Khas Marriage Hall, near Misrial Road, Rawalpindi Cantt</p>
                 
                 <div class="map-container">
-                    <iframe src="{{EMBED_URL}}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://maps.google.com/maps?q=Dewan-e-Khas%20Marriage%20Hall%2C%20near%20Misrial%20Road%2C%20Rawalpindi%20Cantt%20Islamabad&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
 
-                <a href="{{MAP_LINK}}" target="_blank" class="btn-map">
+                <a href="https://maps.app.goo.gl/1iERmCkWCojMCfYJ6" target="_blank" class="btn-map">
                     <i class="fas fa-location-arrow"></i> GET DIRECTIONS
                 </a>
             </div>
@@ -268,7 +262,7 @@ html_template = """<!DOCTYPE html>
 
             try {
                 // Ensure the table exists (idempotent)
-                await sql`CREATE TABLE IF NOT EXISTS "{{TABLE_NAME}}" (
+                await sql`CREATE TABLE IF NOT EXISTS "registration-dewan-e-khas-marriage-hall" (
                     id SERIAL PRIMARY KEY,
                     timestamp TEXT,
                     location TEXT,
@@ -281,7 +275,7 @@ html_template = """<!DOCTYPE html>
                 )`;
 
                 // Insert the new registration
-                await sql`INSERT INTO "{{TABLE_NAME}}" (timestamp, location, read, want, name, mobile, age, profession)
+                await sql`INSERT INTO "registration-dewan-e-khas-marriage-hall" (timestamp, location, read, want, name, mobile, age, profession)
                     VALUES (${timestamp}, ${location}, ${read}, ${want}, ${name}, ${mobile}, ${age}, ${profession})`;
 
                 // Trigger n8n Webhook for WhatsApp Automation (WAHA API)
@@ -294,7 +288,7 @@ html_template = """<!DOCTYPE html>
                         event: "new_registration",
                         created_at: timestamp,
                         venue: location,
-                        admin_phone: "{{WA_PHONE}}",
+                        admin_phone: "923005077164",
                         user: { name, mobile, age, profession }
                     })
                 }).catch(err => console.log("Webhook trigger failed:", err));
@@ -314,87 +308,3 @@ html_template = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-
-# 2. CONFIGURATION: CSV File Name
-csv_file = 'DTQ 26 - Locations - Punjab Shumali.csv'
-
-# 3. GENERATION LOOP
-try:
-    # Use pandas to read the CSV. 
-    # Standard CSVs (like the one you uploaded) usually have the header on the first row (index 0).
-    df = pd.read_csv(csv_file) 
-    
-    # Create an output directory
-    output_dir = os.path.join("generated_pages", "DB_Websites")
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    print(f"Found {len(df)} locations. Generating files...")
-
-    for index, row in df.iterrows():
-        # A. EXTRACT DATA based on your new CSV columns:
-        # 'Location Name', 'Venue', 'Location Link', 'Contact Number'
-        
-        # 1. Filename (from 'Location Name', e.g., 'Abpara')
-        loc_id = str(row['Location Name']).strip()
-        
-        # 2. Address (from 'Venue', e.g., 'Regalia Hotel, Street 48...')
-        address = str(row['Venue']).strip()
-        
-        # 3. Venue Name (The building name, extracted from the first part of the address)
-        #    Example: "Regalia Hotel, Street 48..." -> "Regalia Hotel"
-        venue_name = address.split(',')[0].strip()
-        
-        # 4. Map Link (from 'Location Link')
-        map_link = str(row['Location Link']).strip()
-        
-        # 5. Phone (from 'Contact Number')
-        raw_phone = str(row['Contact Number'])
-        if raw_phone.endswith('.0'):
-            raw_phone = raw_phone[:-2]
-        phone = raw_phone
-        
-        # B. PREPARE VARIABLES
-        # Create a Google Maps Embed URL by searching the full address
-        encoded_address = urllib.parse.quote(f"{address} Islamabad")
-        embed_url = f"https://maps.google.com/maps?q={encoded_address}&t=&z=14&ie=UTF8&iwloc=&output=embed"
-        
-        # Format WhatsApp Phone (assuming Pakistan 92 code)
-        clean_phone_for_wa = phone.replace('-', '').replace(' ', '').replace('+', '')
-        if len(clean_phone_for_wa) >= 10 and not clean_phone_for_wa.startswith('92'):
-             wa_phone = "92" + clean_phone_for_wa[-10:]
-        else:
-             wa_phone = clean_phone_for_wa
-
-        # C. FILL TEMPLATE
-        # Generate Table Name (e.g., registration-kashmir-plaza)
-        sanitized_venue = re.sub(r'[^a-zA-Z0-9]+', '-', venue_name.lower()).strip('-')
-        table_name = f"registration-{sanitized_venue}"
-
-        filled_html = html_template.replace("{{VENUE_NAME}}", venue_name)
-        filled_html = filled_html.replace("{{TABLE_NAME}}", table_name)
-        filled_html = filled_html.replace("{{ADDRESS}}", address)
-        filled_html = filled_html.replace("{{MAP_LINK}}", map_link)
-        filled_html = filled_html.replace("{{EMBED_URL}}", embed_url)
-        filled_html = filled_html.replace("{{PHONE}}", phone)
-        filled_html = filled_html.replace("{{WA_PHONE}}", wa_phone)
-        
-        # D. SAVE FILE
-        # Naming the file using the 'Location Name' (e.g., Abpara.html)
-        filename = f"{loc_id}.html"
-        filepath = os.path.join(output_dir, filename)
-        
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(filled_html)
-            
-        print(f"✅ Generated: {filename}")
-
-    print(f"\n🎉 Success! All files are in the '{output_dir}' folder.")
-
-except FileNotFoundError:
-    print(f"❌ Error: Could not find '{csv_file}'. Make sure it is in the same folder.")
-except KeyError as e:
-    print(f"❌ Error: Column not found in CSV: {e}. Check your CSV headers.")
-except Exception as e:
-    print(f"❌ An error occurred: {e}")
