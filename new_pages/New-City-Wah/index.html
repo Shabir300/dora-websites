@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dora Tarjuma Quran 2026 - Royal Mansion</title>
+    <title>Dora Tarjuma Quran 2026 - Royal Palace Banquet Hall</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Gulzar:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -82,7 +82,7 @@
 
     <nav class="nav-bar">
         <img src="logo.svg" alt="Tanzeem" class="nav-logo" />
-        <a href="https://wa.me/923008550773?text=Assalamualaikum,%20I%20need%20more%20information%20about%20Dora%20Tarjuma%20Quran%20at%20Royal Mansion" class="nav-whatsapp" target="_blank">
+        <a href="https://wa.me/923455612409?text=Assalamualaikum,%20I%20need%20more%20information%20about%20Dora%20Tarjuma%20Quran%20at%20Royal Palace Banquet Hall" class="nav-whatsapp" target="_blank">
             <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> <span>Contact</span>
         </a>
     </nav>
@@ -133,7 +133,7 @@
         <div class="form-card">
             <form id="main-form">
                 
-                <input type="hidden" id="input_location" value="Royal Mansion" />
+                <input type="hidden" id="input_location" value="Royal Palace Banquet Hall" />
 
                 <div class="progress-indicator">
                     <div class="dot active" id="dot-1"></div><div class="dot" id="dot-2"></div><div class="dot" id="dot-3"></div>
@@ -172,7 +172,7 @@
                         <h2 style="color:var(--primary); margin-bottom:10px; font-weight:800;">JazakAllah Khair!</h2>
                         <p style="color:var(--text-gray); margin-bottom: 20px;">Your registration is confirmed.</p>
                         <div style="background:#f0fdf4; padding:15px; border-radius:12px; font-size:0.9rem; color:var(--primary-dark);">
-                            For updates, save our number: <br><strong>3008550773</strong>
+                            For updates, save our number: <br><strong>3455612409</strong>
                         </div>
                     </div>
                 </div>
@@ -184,22 +184,24 @@
         <div class="venue-box">
             <div class="venue-header">EVENT VENUE</div>
             <div class="venue-body">
-                <div class="venue-name urdu" style="font-family: 'Noto Nastaliq Urdu', serif;">Royal Mansion</div>
-                <p class="urdu" style="color:var(--text-gray); margin-bottom:1.5rem; text-align: center;">Royal Mansion, Saidpur Road, Haidri Chowk, Rawalpindi</p>
+                <div class="venue-name urdu" style="font-family: 'Noto Nastaliq Urdu', serif;">Royal Palace Banquet Hall</div>
+                <p class="urdu" style="color:var(--text-gray); margin-bottom:1.5rem; text-align: center;">Royal Palace Banquet Hall, New City, G.T. Road, Wah Cantt</p>
                 
                 <div class="map-container">
-                    <iframe src="https://maps.google.com/maps?q=Royal%20Mansion%2C%20Saidpur%20Road%2C%20Haidri%20Chowk%2C%20Rawalpindi%20Islamabad&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe src="https://maps.google.com/maps?q=Royal%20Palace%20Banquet%20Hall%2C%20New%20City%2C%20G.T.%20Road%2C%20Wah%20Cantt%20Islamabad&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
 
-                <a href="https://maps.app.goo.gl/6F3GfxLaWJbZs8MA7" target="_blank" class="btn-map">
+                <a href="https://maps.app.goo.gl/sQvzhCtkdBKK3jDg9" target="_blank" class="btn-map">
                     <i class="fas fa-location-arrow"></i> GET DIRECTIONS
                 </a>
 
-                <a href="https://nearby.doraquran.pk" target="_blank" class="btn-map">
-                    <i class="fas fa-location-arrow"></i> NEARBY DORA LOCATIONS APP
-                </a>
             </div>
+            
         </div>
+
+        <a href="https://nearby.doraquran.pk" target="_blank" class="btn-map" style="margin-block: 20px">
+            <i class="fas fa-location-arrow"></i> NEARBY DORA LOCATIONS APP
+        </a>
 
         <div class="features-grid">
             <div class="feature-box"><div class="feature-icon"><i class="fas fa-female"></i></div><div class="feature-text">Ladies Arrangement</div></div>
@@ -261,8 +263,8 @@
         const neon_db_url = "postgresql://neondb_owner:npg_j7SFZqzR5the@ep-empty-rice-a18ykd4a-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
         const sql = neon(neon_db_url);
 
-        const ADMIN_PHONE = "923008550773";
-        const WA_PHONE = "923008550773";
+        const ADMIN_PHONE = "923455612409";
+        const WA_PHONE = "923455612409";
 
         const N8N_WEBHOOK_URL = "https://n8n.premierchoiceint.online/webhook/registration-trigger"
 
@@ -288,7 +290,7 @@
 
             try {
                 // Ensure the table exists (idempotent)
-                await sql`CREATE TABLE IF NOT EXISTS "registration-royal-mansion" (
+                await sql`CREATE TABLE IF NOT EXISTS "registration-royal-palace-banquet-hall" (
                     id SERIAL PRIMARY KEY,
                     timestamp TEXT,
                     location TEXT,
@@ -301,7 +303,7 @@
                 )`;
 
                 // Insert the new registration
-                await sql`INSERT INTO "registration-royal-mansion" (timestamp, location, read, want, name, mobile, age, profession)
+                await sql`INSERT INTO "registration-royal-palace-banquet-hall" (timestamp, location, read, want, name, mobile, age, profession)
                     VALUES (${timestamp}, ${location}, ${read}, ${want}, ${name}, ${formattedMobile}, ${age}, ${profession})`;
 
                 // ── 3. Fire n8n webhook (non-blocking) ──

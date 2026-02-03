@@ -202,11 +202,13 @@ html_template = r"""<!DOCTYPE html>
                     <i class="fas fa-location-arrow"></i> GET DIRECTIONS
                 </a>
 
-                <a href="https://nearby.doraquran.pk" target="_blank" class="btn-map">
-                    <i class="fas fa-location-arrow"></i> NEARBY DORA LOCATIONS APP
-                </a>
             </div>
+            
         </div>
+
+        <a href="https://nearby.doraquran.pk" target="_blank" class="btn-map" style="margin-block: 20px">
+            <i class="fas fa-location-arrow"></i> NEARBY DORA LOCATIONS APP
+        </a>
 
         <div class="features-grid">
             <div class="feature-box"><div class="feature-icon"><i class="fas fa-female"></i></div><div class="feature-text">Ladies Arrangement</div></div>
@@ -418,7 +420,7 @@ try:
             os.makedirs(location_folder)
 
         # 1. Save HTML
-        filename = f"{loc_id}.html"
+        filename = f"index.html"
         filepath = os.path.join(location_folder, filename)
         
         with open(filepath, "w", encoding="utf-8") as f:
