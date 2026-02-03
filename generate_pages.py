@@ -274,6 +274,7 @@ html_template = r"""<!DOCTYPE html>
         const WA_PHONE = "{{WA_PHONE}}";
 
         const N8N_WEBHOOK_URL = "https://n8n.premierchoiceint.online/webhook/registration-trigger"
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXNQV7EreIbUiIMxuJQrDri_2BTehFLlauhpFGcVefP0I2Vnf8PyJYr5VdsXaztXlx/exec";
 
         window.submitForm = async function() {
             const name = document.getElementById('name').value.trim();
@@ -309,6 +310,10 @@ html_template = r"""<!DOCTYPE html>
                     profession TEXT
                 )`;
 
+
+
+                
+
                 // Insert the new registration
                 await sql`INSERT INTO "{{TABLE_NAME}}" (timestamp, location, read, want, name, mobile, age, profession)
                     VALUES (${timestamp}, ${location}, ${read}, ${want}, ${name}, ${formattedMobile}, ${age}, ${profession})`;
@@ -327,6 +332,26 @@ html_template = r"""<!DOCTYPE html>
                         registered_at: timestamp
                     })
                 }).catch(err => console.warn("n8n webhook call failed (non-critical):", err));
+
+                // ── 4. Save to Google Sheet (Parallel) ──
+                // Using text/plain to avoid CORS preflight (403) issues
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        timestamp: timestamp,
+                        location: location,
+                        sheetName: location,
+                        read: read,
+                        want: want,
+                        name: name, 
+                        mobile: formattedMobile,
+                        age: age,
+                        profession: profession
+                    })
+                }).then(res => res.json())
+                  .then(data => console.log("Google Sheet response:", data))
+                  .catch(err => console.warn("Google Sheet call failed:", err));
 
                 // Show success message
                 document.querySelector(`.step-content[data-step="3"]`).classList.remove('active');
